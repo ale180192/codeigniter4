@@ -1,0 +1,32 @@
+version: "3"
+ 
+services:
+  mysicuel:
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=codeigniter_test
+      - MYSQL_ROOT_PASSWORD=ale
+      - MYSQL_USER=ale
+      - MYSQL_PASSWORD=ale
+    volumes:
+      # Montamos un volumen para MySQL para no perder los datos de bd
+      - ./volumenes/mysql:/var/lib/mysql
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+    container_name: mysicuel
+   
+  apaches:
+    build: 
+      context: 'deploy/apache'
+    volumes:
+      # Montamos nuestra web desde fuera en el directorio web del contenedor
+      - ./public_html/:/var/www/html
+    expose:
+      - 80
+    ports:
+      - 80:80
+    links: 
+      - mysicuel
+    container_name: apaches

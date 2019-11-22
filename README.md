@@ -1,66 +1,70 @@
-# CodeIgniter 4 Application Starter
+install packeages:
+sudo apt install php-json
+sudo apt install php-mbstring
+sudo apt install php-mysqlnd
+sudo apt install php-xml
 
-## What is CodeIgniter?
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible, and secure. 
-More information can be found at the [official site](http://codeigniter.com).
+# activate extensions
+sudo nano /etc/php/7.2/apache2/php.ini
 
-This repository holds a composer-installable app starter.
-It has been built from the 
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+extension=mysqli
+extension=curl
+extension=intl
 
-**This is pre-release code and should not be used in production sites.**
+# install composer
 
-More information about the plans for version 4 can be found in [the announcement](http://forum.codeigniter.com/thread-62615.html) on the forums.
+sudo apt install curl php-cli php-mbstring git unzip
+cd ~
+curl -sS https://getcomposer.org/installer -o composer-setup.php
+sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
-The user guide corresponding to this version of the framework can be found
-[here](https://codeigniter4.github.io/userguide/). 
+# install and create proyect.
+cd folder_project
+composer create-project codeigniter4/appstarter . -s rc
 
-## Installation & updates
+# validate php.ini extensions exists. We raised php --ini to validate ours extensions
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+    - /etc/php/7.2/cli/php.ini
+    - /etc/php/7.2/cli/conf.d/10-mysqlnd.ini
+    - /etc/php/7.2/cli/conf.d/10-opcache.ini
+    - /etc/php/7.2/cli/conf.d/10-pdo.ini
+    - /etc/php/7.2/cli/conf.d/15-xml.ini
+    - /etc/php/7.2/cli/conf.d/20-calendar.ini
+    - /etc/php/7.2/cli/conf.d/20-ctype.ini
+    - /etc/php/7.2/cli/conf.d/20-dom.ini
+    - /etc/php/7.2/cli/conf.d/20-exif.ini
+    - /etc/php/7.2/cli/conf.d/20-fileinfo.ini
+    - /etc/php/7.2/cli/conf.d/20-ftp.ini
+    - /etc/php/7.2/cli/conf.d/20-gettext.ini
+    - /etc/php/7.2/cli/conf.d/20-iconv.ini
+    - /etc/php/7.2/cli/conf.d/20-json.ini
+    - /etc/php/7.2/cli/conf.d/20-mbstring.ini
+    - /etc/php/7.2/cli/conf.d/20-mysqli.ini
+    - /etc/php/7.2/cli/conf.d/20-pdo_mysql.ini
+    - /etc/php/7.2/cli/conf.d/20-pdo_pgsql.ini
+    - /etc/php/7.2/cli/conf.d/20-pgsql.ini
+    - /etc/php/7.2/cli/conf.d/20-phar.ini
+    - /etc/php/7.2/cli/conf.d/20-posix.ini
+    - /etc/php/7.2/cli/conf.d/20-readline.ini
+    - /etc/php/7.2/cli/conf.d/20-shmop.ini
+    - /etc/php/7.2/cli/conf.d/20-simplexml.ini
+    - /etc/php/7.2/cli/conf.d/20-sockets.ini
+    - /etc/php/7.2/cli/conf.d/20-sysvmsg.ini
+    - /etc/php/7.2/cli/conf.d/20-sysvsem.ini
+    - /etc/php/7.2/cli/conf.d/20-sysvshm.ini
+    - /etc/php/7.2/cli/conf.d/20-tokenizer.ini
+    - /etc/php/7.2/cli/conf.d/20-wddx.ini
+    - /etc/php/7.2/cli/conf.d/20-xmlreader.ini
+    - /etc/php/7.2/cli/conf.d/20-xmlwriter.ini
+    - /etc/php/7.2/cli/conf.d/20-xsl.ini
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
 
-## Setup
+# run docker image
+sudo sudo docker volume create codeigniter-vol
+sudo docker build . -t codeigniter4
+sudo docker run --name codeigniter-container -p 8001:80 -it codeigniter4
+sudo docker-compose up --build -d
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
-
-## Important Change with index.php
-
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
-
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
-
-**Please** read the user guide for a better explanation of how CI4 works!
-The user guide updating and deployment is a bit awkward at the moment, but we are working on it!
-
-## Repository Management
-
-We use Github issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
-
-This repository is a "distribution" one, built by our release preparation script. 
-Problems with it can be raised on our forum, or as issues in the main repository.
-
-## Server Requirements
-
-PHP version 7.2 or higher is required, with the following extensions installed: 
-
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
-
-Additionally, make sure that the following extensions are enabled in your PHP:
-
-- json (enabled by default - don't turn it off)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php)
-- xml (enabled by default - don't turn it off)
+# connect to container
+sudo docker exec -it baa36ad3d2c2 /bin/sh
